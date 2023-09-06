@@ -1,14 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;700&family=Lora:wght@400;500;700&display=swap');
+@use'./laptop';
+@use './mobile';
+@use './tablet';
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;700&family=Jomolhari&display=swap');
 
 :root{
     --dark-color : #222222;
     --tertier-color : #CE9C5D;
 
     --paragraf-font : "Inter", sans-serif;
-    --header-font : "Lora", serif;
+    --header-font : "Jomolhari", serif;
     --hand-font : "Great Vibes", cursive;
 
     --initial-margin : 10.8rem;
+
+    @include mobile.mobile{
+        --initial-margin : 4.2rem;
+    }
 }
 *{
     margin: 0;
@@ -17,11 +25,28 @@
     font-size: calc(.625 * 16px);
 }
 
+body{
+    overflow-x: hidden;
+}
+
 p,h1,h2,h3,h4,h5,h6{
     margin-bottom: 0;
 }
 
-button, input{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    font-family: var(--header-font);
+}
+
+p{
+    font-family: var(--paragraf-font);
+}
+
+button, input,textarea{
     background: transparent;
     border: none;
     outline: none;
@@ -36,6 +61,105 @@ a{
     color: var(--dark-color);
 }
 
+.mobile-header{
+    width: 100%;
+    height: auto;
+    padding: 2.4rem;
+    display: none;
+    &.dark{
+        background: var(--dark-color);
+        padding-block: 2.4rem;
+        top: 0;
+    }
+
+    @include mobile.mobile{
+        display: flex;
+    }
+
+    picture{
+        width: 25%;
+        height: 4.2rem;
+        
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+    .menu-toggle{
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+
+        span{
+            width: 100%;
+            height: 3px;
+            background: white;
+        }
+    }
+}
+
+.mobile-nav{
+    position: absolute;
+    width: 50vw;
+    height: 100vh;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4.8rem;
+    background: var(--dark-color);
+    z-index: 100000;
+    flex-direction: column;
+    padding-inline: 2.4rem;
+    padding-top: 4.8rem;
+    right: 0;
+    transform: translateX(100%);
+    transition: transform .6s;
+    display: none;
+
+    &.isActive{
+        transform: translateX(0);
+    }
+
+    @include mobile.mobile{
+        display: flex;
+    }
+    .menu-toggle-close{
+        width: 3rem;
+        height: 3rem;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        span{
+            width: 100%;
+            height: 3px;
+            background: white;
+            position: absolute;
+            
+            &:first-child{
+                transform: rotate(45deg);
+            }
+            &:last-child{
+                transform: rotate(-45deg);
+            }
+        }
+    }
+
+    a{
+        font-family: var(--paragraf-font), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 400;
+        line-height: 1.68rem;
+        color: white;
+        text-transform: uppercase;
+    }
+}
+
 header{
     position: absolute;
     top: 1.3rem;
@@ -48,9 +172,26 @@ header{
     justify-content: space-between;
     z-index: 9999;
 
+    &.nav-dark{
+        background: var(--dark-color);
+        padding-block: 2.4rem;
+        top: 0;
+    }
+
+    @include mobile.mobile{
+        width: 100vw;
+        display: none;
+    }
+
     .logo--container{
         width: 18.452rem;
         height: 9.9rem;
+
+        @include mobile.mobile{
+            width: 9rem;
+            height: 4.5rem;
+        }
+
 
         img{
             width: 100%;
@@ -65,7 +206,6 @@ header{
         align-items: center;
         justify-content: flex-start;
         column-gap: 3.2rem;
-
         a{
             font-family: var(--paragraf-font), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             font-size: 1.4rem;
@@ -73,6 +213,10 @@ header{
             line-height: 1.68rem;
             color: white;
             text-transform: uppercase;
+            @include mobile.mobile{
+                --initial-width : 32rem;
+                font-size: 2.4rem;
+            }
 
             &::after{
                 content: "";
@@ -118,6 +262,11 @@ header{
                 transition: opacity 2s linear;
             }
         }
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
     .content-overlay--container{
         width: 100%;
@@ -125,6 +274,13 @@ header{
         position: absolute;
         padding: 0 var(--initial-margin);
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.60) 0%, rgba(37, 37, 37, 0.00) 100%);
+        @include mobile.mobile{
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 0;
+            
+        }
 
 
         article{
@@ -136,12 +292,23 @@ header{
             flex-direction: column;
             row-gap: 2.8rem;
             opacity: 0;
-            transition: opacity 2s;
+            visibility: hidden;
+            transition: opacity 2s, visibility 2s;
+            @include mobile.mobile{
+                width: 100%;
+                left: 0;
+                padding-left: var(--initial-margin);
+                padding-right: 2.4rem;
+                margin-top: 0;
+                margin-bottom: 6.4rem;
+
+            }
 
 
             &.fadeIn{
                 opacity: 1;
-                transition: opacity 2s ease-in;
+                transition: opacity 2s ease-in, visibility 2s ease-in;
+                visibility: visible;
             }
 
             .dynamic--paragraf-container{
@@ -151,6 +318,9 @@ header{
                 flex-direction: column;
                 align-items: flex-start;
                 justify-content: flex-start;
+                @include mobile.mobile{
+                    width: 100%;
+                }
 
                 .dynamic--paragraf, span, h2{
                     --initial-font-size : 4.8rem;
@@ -159,6 +329,11 @@ header{
                     color: white;
                     text-transform: capitalize;
                     font-weight: 400;
+
+                    
+                    @include mobile.mobile{
+                        font-size: 3.2rem;
+                    }
                     
                     span{
                         font-family: var(--hand-font);
@@ -177,6 +352,11 @@ header{
                 font-size: 1.8rem;
                 color : white;
                 font-weight: 400;
+                
+                @include mobile.mobile{
+                    font-size: 1.6rem;
+                    width: 100%;
+                }
             }
         }
     }
@@ -201,6 +381,9 @@ header{
             line-height: 5rem;
             text-align: center;
             color: var(--dark-color);
+            @include mobile.mobile{
+                font-size: 3.2rem;
+            }
         }
         h3{
             font-family: var(--header-font);
@@ -210,6 +393,9 @@ header{
             text-align: center;
             color: var(--dark-color);
             text-transform: lowercase;
+            @include mobile.mobile{
+                font-size: 2.4rem;
+            }
         }
         p{
             width: 101.6rem;
@@ -221,6 +407,10 @@ header{
             color:#787878;
             margin-top: 1.2rem;
 
+            @include mobile.mobile{
+                width: 100%;
+            }
+
         }
     }
 
@@ -230,10 +420,20 @@ header{
         margin-right: var(--initial-margin);
         margin-top: 10.6rem;
 
+        @include mobile.mobile{
+            margin-top: 0;
+            height: 32rem;
+            margin-right: 1.2rem;
+        }
+
         img{
             width: 100%;
             height: 100%;
             object-fit: contain;
+
+            @include mobile.mobile{
+                object-fit: contain;
+            }
         }
     }
     a{
@@ -258,6 +458,10 @@ header{
     background: #F3F7FA;
     position: relative;
 
+    @include mobile.mobile{
+        padding: 0 var(--initial-margin);
+    }
+
     article{
         margin-top: 8.3rem;
         row-gap: 1.2rem;
@@ -268,6 +472,11 @@ header{
             font-weight: 400;
             color: var(--dark-color);
             line-height: 5rem;
+
+            @include mobile.mobile{
+                font-size: 3.2rem;
+                text-align: center;
+            }
         }
         h3{
             width: 86rem;
@@ -276,6 +485,10 @@ header{
             font-weight: 400;
             color: var(--dark-color);
             text-align: center;
+
+            @include mobile.mobile{
+                width: 100%;
+            }
         }
     }
     .card--container{
@@ -286,6 +499,12 @@ header{
         row-gap: 2.4rem;
         column-gap: 2.4rem;
         margin-bottom: 10rem;
+
+        @include mobile.mobile{
+            width: 100%;
+            grid-template-columns: 100%;
+            grid-template-rows: repeat(3, 30.8rem);
+        }
         
         .card{
             width: 100%;
@@ -295,9 +514,17 @@ header{
             position: relative;
             box-shadow: 0px 0px 30px 0px #00000026;
 
+            @include mobile.mobile{
+                border-radius: 1.2rem;
+            }
+
             &:first-child{
                 grid-column: 1 / 1;
                 grid-row: 1 / span 2;
+
+                @include mobile.mobile{
+                    grid-row: 1 / 1;
+                }
             }
 
             .card--img{
@@ -306,10 +533,16 @@ header{
                 padding: 0;
                 position: absolute;
                 img{
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
-                    transform: translateX(-10%);
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+
+                    @include mobile.mobile{
+                        width: 100%;
+                        height: 100%;
+                        transform: translateX(0);
+                        object-fit: cover;
+                    }
                 }
             }
 
@@ -344,6 +577,11 @@ header{
     background: white;
     padding: 0 var(--initial-margin);
 
+    @include mobile.mobile{
+        width: 100%;
+        flex-direction: column;
+    }
+
     article{
         h3{
             margin-top: 12.4rem;
@@ -353,6 +591,11 @@ header{
             line-height: 5rem;
             letter-spacing: -0.02em;
             text-align: center;
+
+            @include mobile.mobile{
+                font-size: 3.2rem;
+                margin-top: 8rem;
+            }
         }
     }
 
@@ -370,9 +613,18 @@ header{
             box-shadow: 0px 0px 30px 0px #0000001A;
             overflow: hidden;
 
+            @include mobile.mobile{
+                width: 100%;
+                height: auto;
+            }
+
             .card-img-top{
                 width: 100%;
                 height: 36rem;
+
+                @include mobile.mobile{
+                    height: 24rem;
+                }
 
                 img{
                     width: 100%;
@@ -382,6 +634,11 @@ header{
             }
             .card-body{
                 padding: 2.8rem 4rem 4rem 4rem;
+
+                @include mobile.mobile{
+                    padding: 1.2rem 2rem 2rem 2rem;
+                }
+
 
                 .card-title{
                     font-family: var(--paragraf-font);
@@ -429,8 +686,15 @@ header{
 }
 .letter--container{
     width: 100%;
-    padding: 54px 241px 117px 183px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
+
+    @include mobile.mobile{
+        padding: 2.4rem var(--initial-margin);
+    }
+    
     
     .letter--outer{
         width: 1016px;
@@ -438,6 +702,11 @@ header{
         border: solid 8px var(--tertier-color);
         border-radius: 22px;
         padding: 8px;
+
+        @include mobile.mobile{
+            width: 100%;
+            height: auto;
+        }
 
         .letter--inner{
             width: 100%;
@@ -449,12 +718,19 @@ header{
             align-items: flex-start;
             justify-content: center;
             padding: 40px 64px 36px 64px;
+
+            @include mobile.mobile{
+                padding: 4rem 2rem;
+            }
             h3{
                 font-family: var(--hand-font);
                 font-size: 3.6rem;
                 font-weight: 400;
                 color: #787878;
                 line-height: 4.32rem;
+                @include mobile.mobile{
+                    font-size: 2.4rem;
+                }
             }
             h4{
                 font-family: var(--paragraf-font);
@@ -491,10 +767,18 @@ header{
     background: #F3F7FA;
     padding-top: 8rem;
     padding-bottom: 6.3rem;
+    @include mobile.mobile{
+        width: 100%;
+    }
 
     article{
         padding: 0 29rem;
         gap: 1.2rem;
+
+        @include mobile.mobile{
+            padding: 0 var(--initial-margin);
+            width: 100%;
+        }
         h3{
             font-family: var(--header-font);
             font-size: 4.2rem;
@@ -502,6 +786,10 @@ header{
             line-height: 5rem;
             letter-spacing: -0.02em;
             text-align: center;
+
+            @include mobile.mobile{
+                font-size: 3.2rem;
+            }
         }
         p{
             font-family: var(--paragraf-font);
@@ -511,6 +799,10 @@ header{
             letter-spacing: 0em;
             text-align: center;
             padding: 0 16.9rem;
+
+            @include mobile.mobile{
+                padding: 0;
+            }
         }
     }
     .slider--container{
@@ -519,6 +811,11 @@ header{
         --initial-width : 68rem;
         height: 55rem;
         padding-top: 3rem;
+
+        @include mobile.mobile{
+            --initial-width : 32rem;
+            height: 42rem;
+        }
 
         .slider--track{
             width: 100%;
@@ -530,11 +827,19 @@ header{
             transform: translateX(0);
             transition: transform 6s linear;
 
+            @include mobile.mobile{
+                height: 38rem;
+            }
+
             .img{
                 width: var(--initial-width);
                 height: 52rem;
                 flex-shrink: 0;
                 position: absolute;
+                @include mobile.mobile{
+                    height: 38rem;
+                }
+    
 
                 &.img-first{
                     transform: translateX(calc(var(--initial-width) + 24px));
@@ -576,7 +881,12 @@ footer{
     .footer-nav--container{
         padding-top: 4.8rem;
         padding-bottom: 4.6rem;
-        border-bottom: solid 1px #383838 ;
+        border-bottom: solid 1px #383838;
+
+        @include mobile.mobile{
+            height: auto;
+            flex-direction: column;
+        }
         .footer--logo{
             width: 171px;
             height: 87.9px;
@@ -592,6 +902,12 @@ footer{
     .footer--nav{
         gap: 3.1rem;
         margin-left: 7.79rem;
+
+        @include mobile.mobile{
+            margin: 2rem auto;
+            align-items: center;
+            
+        }
         
         a{
             text-transform: uppercase;
@@ -608,6 +924,11 @@ footer{
         gap: 2.4rem;
         margin-left: auto;
         margin-bottom: calc(7.3rem - 4.6rem);
+
+        @include mobile.mobile{
+            width: 100%;
+            margin: 2rem auto;
+        }
         p{
             font-family: var(--paragraf-font);
             font-size: 14px;
@@ -665,27 +986,30 @@ footer{
                     padding-right: 1.6rem;
                     border-right: solid 1px #868686;
                 }
+                &:nth-child(2){
+                    padding-inline: 1.6rem;
+                }
                 &:last-child{
                     padding-left: 1.6rem;
+                    border-left: solid 1px #868686;
                 }
             }
         }
     }
 }
 
-.timed--popup{
+.popup-custom{
     position: absolute;
-    top: 1500px;
-    z-index: 888;
+    top: 0;
+    z-index: 99999;
     background: rgba(255, 255, 255, .4);
     width: 100%;
     backdrop-filter: blur(5px);
     padding: 5rem 0;
-    transform: scale(0);
-    transition: transform .6s;
+    display: none;
 
     &.isActive{
-        transform: scale(1);
+        display: flex;
     }
 
     .popup--container{
@@ -747,6 +1071,11 @@ footer{
                     row-gap: 1.8rem;
                     column-gap: 1.2rem;
 
+                    @include mobile.mobile{
+                        grid-template-columns: 100%;
+                        grid-template-rows: repeat(4,1fr);
+                    }
+
                 }
             }
             .company{
@@ -758,6 +1087,10 @@ footer{
                     grid-template-rows: repeat(1, 1fr);
                     row-gap: 1.8rem;
                     column-gap: 1.2rem;
+                    @include mobile.mobile{
+                        grid-template-columns: 100%;
+                        grid-template-rows: repeat(2,1fr);
+                    }
 
                 }
             }
@@ -782,6 +1115,11 @@ footer{
     transform: scaleY(0);
     transition: transform .6s;
 
+    @include mobile.mobile{
+        width: 100%;
+        left: -.2rem;
+    }
+
     &.isActive{
         transform: scaleY(1);
     }
@@ -795,6 +1133,12 @@ footer{
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
+
+        @include mobile.mobile{
+            padding: 1.2rem 2rem;
+            left: 0;
+        }
+    
 
         .opener{
             display: flex;
@@ -840,12 +1184,24 @@ footer{
             row-gap: 2rem;
             margin-top: 4.3rem;
 
+            @include mobile.mobile{
+                grid-template-columns: 100%;
+                grid-template-rows: repeat(6,1fr);
+                row-gap: 1.2rem;
+                column-gap: 0;
+            }
+        
+
             .point{
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 justify-content: flex-start;
                 gap: 1.6rem;
+
+                @include mobile.mobile{
+                    gap: 1rem;
+                }
 
                 h4{
                     font-family: var(--paragraf-font);
@@ -855,6 +1211,11 @@ footer{
                     line-height: 120%; /* 28.8px */
                     letter-spacing: -0.48px;
                     color: var(--dark-color);
+
+                    @include mobile.mobile{
+                        font-size: 2rem;
+                    }
+                
                 }
                 p{
                     color: #787878;
@@ -863,6 +1224,9 @@ footer{
                     font-style: normal;
                     font-weight: 400;
                     line-height: 24px; /* 150% */
+                    @include mobile.mobile{
+                        font-size: 1.2rem;
+                    }
                 }
             }
         }
@@ -888,6 +1252,10 @@ footer{
                     line-height: 120%;
                     text-decoration: underline;
                     color: var(--tertier-color);
+
+                    @include mobile.mobile{
+                        font-size: 1.2rem;
+                    }
                 }
             }
             p{
@@ -897,6 +1265,9 @@ footer{
                 font-weight: 400;
                 line-height: 120%;
                 color: #787878;
+                @include mobile.mobile{
+                    font-size: 1.2rem;
+                }
             }
         }
         .sign{
@@ -908,6 +1279,10 @@ footer{
             color: #787878;
             margin-top: 4.5rem;
             margin-left: auto;
+
+            @include mobile.mobile{
+                font-size: 2rem;
+            }
         }
         .close--letter{
             font-family: var(--paragraf-font);
@@ -941,6 +1316,12 @@ footer{
     background: var(--tertier-color);
     padding: var(--initial-padding-block) var(--initial-padding-inline);
     border-radius: var(--initial-border-radius);
+    opacity: 1;
+    transform: opacity .6s;
+
+    &:disabled{
+        opacity: .5;
+    }
 }
 
 .outline--btn{
@@ -969,18 +1350,804 @@ footer{
     align-items: center;
     justify-content: space-between;
     border: solid 1px #D3D2D5;
+}
 
-    input{
+input, textarea{
+    width: 100%;
+    font-family: var(--paragraf-font);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: var(--dark-color);
+}
+
+input::placeholder{
+    font-family: var(--paragraf-font);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #B9B9B9;
+}
+// hwt page
+.hwt-page-banner{
+    row-gap: 4.2rem;
+
+    h1{
+        color: white;
+        font-size: 4.8rem;
+        @include mobile.mobile{
+            font-size: 4.2rem;
+            margin-left: var(--initial-margin);
+        }
+    }
+    p{
+        color: white;
+        font-size: 1.8rem;
+        width: 50%;
+
+        @include mobile.mobile{
+            width: 90%;
+            font-size: 1.6rem;
+            margin-left: var(--initial-margin);
+        }
+    }
+    
+    .main-cta--btn{
+        margin-bottom: 16.5rem;
+        @include mobile.mobile{
+            margin-left: var(--initial-margin);
+        }
+    }
+}
+
+// how it works page
+
+.guide--container{
+    .container-fluid{
+        margin-top: 7rem;
+        gap: 1.2rem;
+        @include mobile.mobile{
+            padding-inline: var(--initial-margin);
+        }
+
+        h2{
+            font-size: 42px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 50.4px */
+            letter-spacing: -0.84px;
+            color: var(--dark-color);
+            text-align: center;
+        }
+        h3{
+            color: #222;
+            font-size: 36px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%;
+            letter-spacing: -0.72px;
+            text-transform: lowercase;
+            text-align: center;
+            @include mobile.mobile{
+                font-size: 3.2rem;
+                text-align: center;
+            }
+        }
+        p{
+            color: #787878;
+            text-align: center;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px; /* 150% */
+            width: 80%;
+        }
+    }
+    .step{
         width: 100%;
+        height: auto;
+        padding: 5.3rem 11rem 10rem 11rem;
+        gap: 8.2rem;
+        @include mobile.mobile{
+            padding: 3.2rem var(--initial-margin);
+            gap: 0;
+        }
+
+        &.colored{
+            background: #F3F7FA;
+        }
+
+        .img--container{
+            width: 681px;
+            height: 584px;
+            position: relative;
+
+            @include mobile.mobile{
+                width: 100%;
+                height: 90%;
+            }
+
+
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                filter: drop-shadow(0px 0px 50px 0px rgba(0, 0, 0, 0.15));
+
+                @include mobile.mobile{
+                    object-fit: fill;
+                }
+            }
+            svg{
+                position: absolute;
+                bottom: 0;
+                transform: translateX(-95%);
+
+                @include mobile.mobile{
+                    display: none;
+                }
+            }
+        }
+
+        .text--container{
+            gap: 1.2rem;
+
+            h4{
+                font-size: 72px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 120%; /* 86.4px */
+                letter-spacing: -1.44px;
+                color: var(--tertier-color);
+            }
+            h5{
+                font-size: 42px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 120%; /* 50.4px */
+                letter-spacing: -0.84px;
+                color: var(--dark-color);
+
+                @include mobile.mobile{
+                    font-size: 3.6rem;
+                }
+            }
+            p{
+                color: #787878;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px; /* 150% */
+            }
+        }
+    }
+}
+.admin--panel{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 5.3rem 11rem 10rem 11rem;
+    gap: 8.6rem;
+
+    @include mobile.mobile{
+        padding: 3.2rem var(--initial-margin);
+        gap: 3.2rem;
+
+        .img--container{
+            width: 100%;
+
+            img{
+                width: 100%;
+                object-fit: cover;
+            }
+        }
     }
 
-    input::placeholder{
-        font-family: var(--paragraf-font);
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 21px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #B9B9B9;
+    .content--container{
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.2rem;
+        flex-direction: column;
+
+        h3{
+            color: #222;
+            text-align: center;
+            font-size: 42px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 50.4px */
+            letter-spacing: -0.84px;
+        }
+        p{
+            color: #787878;
+            text-align: center;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px; /* 150% */
+            width: 75%;
+
+            @include mobile.mobile{
+                width: 100%;
+            }
+        }
+
+    }
+}
+.closing--section{
+    width: 100%;
+    height: 456px;
+    padding: 9.9rem 6.5rem 10.3rem var(--initial-margin);
+    background: url('../public/assets/HIW-bg-2-lg.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    @include mobile.mobile{
+        padding: 3.2rem var(--initial-margin);
+    }
+
+
+    .cta--container{
+        width: 51.4rem;
+        gap: 2.6rem;    
+        h3{
+            color: var(--dark-color);
+            font-size: 48px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 57.6px */
+            letter-spacing: -0.96px;
+
+            @include mobile.mobile{
+                font-size: 4.2rem;
+            }
+        }
+    }
+}
+
+// FAQ page
+.FAQ--banner, .banner{
+    width: 100%;
+    height: 620px;
+    background: url('../public/assets/FAQ-bg.png');
+    background-size: cover;
+    background-position: center left;
+    background: no-repeat;
+    position: relative;
+
+    .bg-img--overlay{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    article{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.60) 0%, rgba(37, 37, 37, 0.00) 89.48%);
+        padding-inline: var(--initial-margin);
+        padding-bottom: 12rem;
+        @include mobile.mobile{
+            padding-bottom: 5rem;
+        }
+
+
+        h1{
+            color: #FFF;
+            font-size: 48px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 57.6px */
+            letter-spacing: -0.96px;
+            width: 35%;
+            @include mobile.mobile{
+                font-size: 4.2rem;
+                width: 80%;
+
+                &.long-para{
+                    font-size: 3.2rem;
+                }
+            }
+        }
+
+        p{
+            color: #FFF;
+            text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 140.5%; /* 25.29px */
+            width: 50%;
+            margin-top: 3.2rem;
+            margin-bottom: 1.2rem;
+            @include mobile.mobile{
+                font-size: 1.6rem;
+                width: 80%;
+            }
+        }
+    }
+}
+
+.accordion--container{
+    padding-inline: 11.2rem;
+    padding-top: 4rem;
+    padding-bottom: 7.6rem;
+    gap: 1.2rem;
+    @include mobile.mobile{
+        padding: 1.2rem var(--initial-margin);
+    }
+
+    .accordion-item{
+        background: white;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+        border-radius: 2rem;
+        overflow: hidden;
+        padding: 2.4rem;
+        border: none;
+
+        .accordion-header{
+            border: none;
+
+            .accordion-button{
+                background: transparent;
+                border: none;
+                outline: none;
+                color: #000;
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 200%; /* 36px */
+                letter-spacing: -0.36px;
+
+                @include mobile.mobile{
+                    font-size: 1.6rem;
+                }
+
+                &::after{
+                    content: var(--bs-accordion-btn-active-icon);
+                    width: 5.2rem;
+                    height: 5.2rem;
+                    background: white;
+                    border-radius: 999px;
+                    box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.10);
+                    padding: 1.2rem;
+
+                    @include mobile.mobile{
+                        width: 3rem;
+                        height: 3rem;
+                        padding: .2rem;
+                    }
+                }
+            }
+        }
+        .accordion-collapse{
+            border: none;
+
+            .body-container{
+                margin-top: 2rem;
+                p{
+                    width: 90%;
+                    border: none;
+                    color: #787878;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 150% */
+                }
+            }
+
+        }
+    }
+}
+
+.column--container{
+    width: 100%;
+    height: auto;
+    padding-inline: 13.2rem;
+    padding-bottom: 16rem;
+
+    @include mobile.mobile{
+        padding-inline: var(--initial-margin);
+    }
+
+    &.colored{
+        background: #F3F7FA;
+    }
+    
+    .title--container{
+        margin-top: 7.9rem;
+        width: 80%;
+        
+        h2{
+            color: #222;
+            text-align: center;
+            font-size: 42px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 120%; /* 50.4px */
+            letter-spacing: -0.84px;
+        }
+        p{
+            color: #787878;
+            text-align: center;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px; /* 150% */
+            margin-top: 1.2rem;
+        }
+    }
+    .content--container{
+        margin-top: 6rem;
+        column-gap: 7.8rem;
+        row-gap: 10rem;
+        display: grid;
+        grid-template-columns: repeat(3, 34rem);
+        grid-template-rows: auto;
+
+        @include mobile.mobile{
+            grid-template-columns: 34rem;
+        }
+        .content{
+            width: 34rem;
+            svg{
+                width: auto;
+                height: 8.5rem;
+            }
+            .title{
+                color: #222;
+                text-align: center;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%; /* 28.8px */
+                letter-spacing: -0.48px;
+                margin-top: 2.6rem;
+            }
+            .para{
+                color: #787878;
+                text-align: center;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px; /* 150% */
+                margin-top: 1.6rem;
+            }
+        }
+    }
+}
+.whc--section{
+    background: url('/public/assets/WCU-bg-2-lg.webp');
+    background-repeat: no-repeat;
+    @include mobile.mobile{
+        background-position: center;
+
+    }
+}
+
+// contact us page
+
+.contact--banner{
+    padding-bottom: 24rem;
+}
+
+.form--container{
+    padding-inline: 11.2rem;
+    width: 100%;
+    height: 761px;
+    position: relative;
+
+    @include mobile.mobile{
+        padding-inline: 1.6rem;
+        height: auto;
+        padding-block: 2rem;
+    }
+
+    .main{
+        position: absolute;
+        width: 1016px;
+        padding: 4.2rem 7.5rem;
+        border-radius: 20px;
+        background: #FFF;
+        box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.20);
+        transform: translateY(-10%);
+
+        @include mobile.mobile{
+            position: relative;
+            padding: 1.2rem 1rem;
+            width: 100%;
+        }
+    }
+
+    form{
+        .input--group{
+            gap: 3.4rem;
+            width: 100%;
+
+            @include mobile.mobile{
+                gap: 1.2rem;
+            }
+        }
+        .colored{
+            background: #F3F7FA;
+            height: 45rem;
+            margin-top: 3.9rem;
+
+            @include mobile.mobile{
+                height: 25rem;
+                margin-top: 2.4rem;
+            }
+        }
+        .btn--container{
+            margin-top: 2.2rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+
+            @include mobile.mobile{
+                justify-content: center;
+            }
+        }
+    }
+}
+
+.captcha--container {
+    width: auto;
+
+    .d-flex{
+        column-gap: 2.4rem;
+        .question{
+            width: 4.2rem;
+            height: 4.2rem;
+            border: .5px solid rgba($color: #000000, $alpha: 0.2);
+            font-family: var(--paragraf-font);
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        p{
+            font-size: 1.6rem;
+        }
+        input{
+            padding: .8rem;
+
+            &.wrong{
+                border: solid .5px #e74c3c;
+            }
+            &.correct{
+                border: solid .5px #2ecc71;
+            }
+        }
+        .alert{
+            &.wrong{
+                color: #e74c3c;
+            }
+            &.correct{
+                color: #2ecc71;
+            }
+        }
+    }
+
+    @include mobile.mobile{
+        margin-top: 2rem;
+    }
+    
+    .submit__control{
+        width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+}
+  
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.8)
+  }
+  
+  .submit__generated {
+    display: flex;
+    
+    span {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      vertical-align: center;
+      line-height: 35px;
+      font-weight: bold;
+      font-size: 16px;
+      color: rgba(0,0,0,0.9);
+      text-align: center;
+      letter-spacing: 1px;
+      text-transform: uppercase;  
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+    
+    &.valid:after,
+    &.unvalid:after {
+      font-family: FontAwesome;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+    &.valid {
+      &:after {
+        content: "\f00c";
+        color: #2ecc71;
+      }
+      .submit__input {
+        border: 1px solid #2ecc71;
+        color: #2ecc71 !important;
+      }
+    }
+    &.unvalid {
+      &:after {
+        content: "\f00d";
+        color: #e74c3c;
+      }
+      .submit__input {
+        border: 1px solid #e74c3c;
+        color: #e74c3c;
+      }
+    }
+  
+    .submit__input {
+      position: relative;
+      outline: 0;
+      height: 35px;
+      width: 35px;
+      border-radius: 4px;
+      border: 1px solid #42A0DD;
+      color: #42A0DD;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      top: -2px;
+    }
+  }
+  
+  
+  
+  
+  i.fa-refresh {
+    margin: 4px 0 0px 5px;
+    padding: 5px;
+    font-size: 18px;
+    color: rgba(0,0,0,0.2);
+    cursor: pointer;
+    transform-origin: center center;
+    transition: transform 0.2s ease-out, color 0.2s ease-out;
+    &:hover {
+      color: rgba(0,0,0,0.4);
+      transform: rotate(180deg);
+    }
+  }
+  
+  span.submit__error,
+  span.submit__error--empty {
+    color: #e74c3c;
+    position: absolute;
+    margin-top: 0px;
+    margin-left: 1rem;
+  }
+  
+  
+  
+  
+  
+  .submit {
+    display: block;
+    margin-top: 1.2rem;
+    padding: 7px 15px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+    border: 0;
+    background-color: #42A0DD;
+    background-clip: padding-box;
+    border-radius: 3px;
+    box-shadow: 0 4px 0 #2C81BA;
+    opacity: 1;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    width: fit-content;
+  
+    &:hover {
+      background-color: #3498db;
+    }
+    &:active,
+    &.enter-press,
+    &.overlay {
+      margin: 12px 0 0 0;
+      box-shadow: none;
+    }
+  }
+  
+  
+      .submit__overlay {
+          height: 50px;
+          width: 100%;
+          background-color: rgba(255,255,255,0.8);
+          position: absolute;
+          margin-top: -20px;
+          margin-left: -5px;
+          display: none;
+      }
+  
+  
+  
+  
+  
+  
+  
+  
+  .low-opa { opacity: 0.4; }
+  .fadeOut {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .fadeIn {
+    opacity: 1 !important;
+    transform: translateY(0px) !important;
+  }
+  .form-fields,
+  .form-success {
+    transition: all 0.2s ease-out;
+  }
+  .form-success {
+    opacity: 0;
+    transform: translateY(-10px);
+    margin-top: 20px;
+  }
+
+//   R&R
+.rr-page{
+    width: 80%;
+    margin-top: 10rem;
+    padding: var(--initial-margin);
+
+    @include mobile.mobile{
+        width: 100%;
+        margin-top: 7.2rem;
+    }
+
+    h1{
+        font-size: 4.8rem;
+    }
+    h2{
+        font-size: 2rem;
+    }
+    p, strong{
+        font-size: 1.6rem;
+
+    }
+    ul{
+        list-style: circle;
+        color: var(--dark-color);
+        li{
+            font-family: var(--paragraf-font);
+            font-size: 1.6rem;
+            color: var(--dark-color)
+        }
     }
 }
